@@ -3,6 +3,8 @@ import { Provider } from 'react-redux'
 import { createAppContainer } from 'react-navigation'
 import AppNavigator from './AppNavigator'
 import configureStore from './configureStore'
+import { YellowBox } from 'react-native';
+import _ from 'lodash';
 
 const store = configureStore()
 
@@ -17,6 +19,15 @@ export default class App extends React.Component {
     )
   }
 }
+
+//警告を強制排除
 console.ignoredYellowBox = [
   'Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).',
 ];
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message);
+  }
+};
