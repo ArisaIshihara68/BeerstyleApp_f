@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 1697,
-  "expoServerNgrokUrl": "https://jm-iea.arisa68.beerstyleapp-f.exp.direct",
-  "packagerNgrokUrl": "https://packager.jm-iea.arisa68.beerstyleapp-f.exp.direct",
-  "ngrokPid": 1714,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }
