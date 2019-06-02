@@ -37,7 +37,10 @@ class DetailScreen extends Component {
         this.setState({
           feed : {
             image: feed.image,
+            beer: feed.beer,
+            rating: feed.rating,
             message: feed.message,
+            location: feed.location,
             writer: feed.writer,
             updated_at: date,
           }
@@ -126,7 +129,13 @@ class DetailScreen extends Component {
 
               <View style={styles.divider} />
 
+              <Text style={styles.description}>{this.state.feed.beer}</Text>
+
+              <Text style={styles.description}>{this.state.feed.rating}</Text>
+
               <Text style={styles.description}>{this.state.feed.message}</Text>
+
+              <Text style={styles.description}>{this.state.feed.location}</Text>
             </View>
           </Content>
         }

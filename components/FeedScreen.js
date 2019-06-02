@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Container, Content, Button, Thumbnail, Badge, Textarea } from 'native-base'
 import { Icon, Permissions, ImagePicker } from 'expo'
 import { getNewFeedDoc, uploadFeedImage, getUid, getNowDate, authFacebook, db } from '../modules/firebase'
+import StarRating from 'react-native-star-rating';
 
 class FeedScreen extends Component {
   constructor(props) {
@@ -10,7 +11,11 @@ class FeedScreen extends Component {
     this.state={
       message: null,
       image: null,
+      beer: null,
+      rating: null,
+      location: null,
       uploading: false,
+      starCount: 5.0
     }
   }
 
@@ -62,6 +67,9 @@ class FeedScreen extends Component {
       await batch.set(feedRef, {
         message: properties.message,
         image: downloadUrl,
+        beer: properties.beer,
+        rating: properties.starCount,
+        location: properties.location,
         writer: uid,
         created_at: getNowDate(),
         updated_at: getNowDate(),
@@ -73,6 +81,9 @@ class FeedScreen extends Component {
       this.setState({
         message: null,
         image: null,
+        beer: null,
+        rating: null,
+        location: null,
       })
       this.props.navigation.navigate('Detail', { uuid })
     }
@@ -82,6 +93,12 @@ class FeedScreen extends Component {
     finally {
       this.setState({ uploading: false })
     }
+  }
+
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
   }
 
   render () {
@@ -111,12 +128,50 @@ class FeedScreen extends Component {
               </View>
 
               <View style={styles.textSection}>
+                <StarRating
+                  disabled={false}
+                  emptyStar="ios-star-outline"
+                  fullStar="ios-star"
+                  halfStar="ios-star-half"
+                  iconSet="Ionicons"
+                  maxStars={5}
+                  rating={this.state.starCount}
+                  selectedStar={rating => this.onStarRatingPress(rating)}
+                  fullStarColor="yellow"
+                  halfStarColor="yellow"
+                  emptyStarColor="yellow"
+                  halfStarEnabled
+                  starPadding={10}
+                />
+              </View>
+
+              <View style={styles.textSection}>
                 <Textarea
                   style={styles.description}
-                  rowSpan={10}
+                  rowSpan={1.2}
                   bordered
-                  placeholder='メッセージ'
+                  placeholder='ビールの名前を入力する。'
+                  onChangeText={beer => this.setState({ beer })}
+                />
+              </View>
+
+              <View style={styles.textSection}>
+                <Textarea
+                  style={styles.description}
+                  rowSpan={5}
+                  bordered
+                  placeholder='詳細なレビューを入力する。'
                   onChangeText={message => this.setState({ message })}
+                />
+              </View>
+
+              <View style={styles.textSection}>
+                <Textarea
+                  style={styles.description}
+                  rowSpan={1.2}
+                  bordered
+                  placeholder='飲んだ場所を入力する。'
+                  onChangeText={location => this.setState({ location })}
                 />
               </View>
 
@@ -181,14 +236,14 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     position: 'absolute',
-    bottom: -32,
+    bottom: 32,
     right: width/20,
     width: 64,
     height: 64,
     borderRadius: 32,
   },
   textSection: {
-    padding: 10,
+    padding: 5,
   },
   title: {
     width: width*9/10,

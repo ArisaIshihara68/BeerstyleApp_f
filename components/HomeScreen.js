@@ -55,7 +55,9 @@ class HomeScreen extends Component {
                 </CardItem>
                 <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
                   <Body>
+                    <Text>{element.beer}</Text>
                     <Text>{element.message}</Text>
+                    <Text>{element.rating}</Text>
                     <Text style={styles.date}>{date}</Text>
                   </Body>
                 </CardItem>
