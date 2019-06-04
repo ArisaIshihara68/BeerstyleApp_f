@@ -34,7 +34,7 @@ class ProfileScreen extends Component {
       }
      console.log(properties)
     })
-    this.unsubscribe = feedCollection.orderBy('created_at').onSnapshot(querySnapshot => {
+    this.unsubscribe = feedCollection.where('writer', '==', this.props.user.uid).onSnapshot(querySnapshot => {
       const feeds = []
       querySnapshot.forEach(doc => {
         feeds.push({ uuid: doc.id, ...doc.data() })
