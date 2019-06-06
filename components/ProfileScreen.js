@@ -8,7 +8,7 @@ class ProfileScreen extends Component {
 
   constructor(props) {
     super(props)
-    this.state={
+    this.state = {
       feeds: null,
     }
   }
@@ -20,7 +20,7 @@ class ProfileScreen extends Component {
   componentWillMount() {
     this.unsubscribe = userCollection.doc(this.props.user.uid || '_').onSnapshot(doc => {
       const properties = doc.data()
-      if(properties) {
+      if (properties) {
         this.props.handleSetUserProperties(Object.assign({
           avatar: null,
           name: null,
@@ -32,7 +32,7 @@ class ProfileScreen extends Component {
           name: null,
         })
       }
-     console.log(properties)
+      console.log(properties)
     })
     this.unsubscribe = feedCollection.where('writer', '==', this.props.user.uid).onSnapshot(querySnapshot => {
       const feeds = []
@@ -48,8 +48,8 @@ class ProfileScreen extends Component {
     this.unsubscribe()
   }
 
-  render () {
-    if(this.props.user.uid) {
+  render() {
+    if (this.props.user.uid) {
 
       const tempAvatar = 'https://firebasestorage.googleapis.com/v0/b/novels-a5884.appspot.com/o/temp%2Ftemp.png?alt=media&token=a4d36af6-f5e8-49ad-b9c0-8b5d4d899c0d'
 
@@ -61,10 +61,10 @@ class ProfileScreen extends Component {
                 <View style={styles.profileMain}>
                   <Thumbnail
                     large
-                    source={{uri: this.props.user.properties.avatar? this.props.user.properties.avatar : tempAvatar}}
+                    source={{ uri: this.props.user.properties.avatar ? this.props.user.properties.avatar : tempAvatar }}
                     style={styles.avatar}
                   />
-                  <Text style={styles.name}>{this.props.user.properties.name? this.props.user.properties.name : '未設定'}</Text>
+                  <Text style={styles.name}>{this.props.user.properties.name ? this.props.user.properties.name : '未設定'}</Text>
                 </View>
                 <Button
                   style={styles.editButton}
@@ -86,35 +86,35 @@ class ProfileScreen extends Component {
             </View>
           </Content>
           <Content>
-          {this.state.feeds && this.state.feeds.map(element => {
-            let date
-            try {
-              date = moment.unix(element.created_at.seconds).format('YYYY/MM/DD HH:mm:ss')
-            }
-            catch (e) {
-              console.log(e)
-              date = '投稿日不明'
-            }
+            {this.state.feeds && this.state.feeds.map(element => {
+              let date
+              try {
+                date = moment.unix(element.created_at.seconds).format('YYYY/MM/DD HH:mm:ss')
+              }
+              catch (e) {
+                console.log(e)
+                date = '投稿日不明'
+              }
 
-            return (
-              <Card style={styles.card} key={element.uuid}>
-                <CardItem cardBody button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
-                  <Image
-                    style={styles.image}
-                    source={{uri: element.image}}
-                  />
-                </CardItem>
-                <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
-                  <Body>
-                    <Text>{element.beer}</Text>
-                    <Text>{element.message}</Text>
-                    <Text>{element.rating}</Text>
-                    <Text style={styles.date}>{date}</Text>
-                  </Body>
-                </CardItem>
-              </Card>
-            )
-          })}
+              return (
+                <Card style={styles.card} key={element.uuid}>
+                  <CardItem cardBody button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
+                    <Image
+                      style={styles.image}
+                      source={{ uri: element.image }}
+                    />
+                  </CardItem>
+                  <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
+                    <Body>
+                      <Text>{element.beer}</Text>
+                      <Text>{element.message}</Text>
+                      <Text>{element.rating}</Text>
+                      <Text style={styles.date}>{date}</Text>
+                    </Body>
+                  </CardItem>
+                </Card>
+              )
+            })}
           </Content>
         </Container>
       )
@@ -127,9 +127,9 @@ class ProfileScreen extends Component {
             dark
             rounded
             onPress={authFacebook}
-            >
-              <Text style={styles.buttonText}>Login with Facebook</Text>
-            </Button>
+          >
+            <Text style={styles.buttonText}>Login with Facebook</Text>
+          </Button>
         </View>
       )
     }
@@ -159,14 +159,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     width: width,
-    height: height/3,
+    height: height / 3,
     padding: 10,
     backgroundColor: 'black',
   },
   avatar: {
-    width: height/5,
-    height: height/5,
-    borderRadius: height/10,
+    width: height / 5,
+    height: height / 5,
+    borderRadius: height / 10,
     marginBottom: 15,
   },
   name: {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     left: 0,
     color: 'gray',
     fontSize: 10.5,
-  },  
+  },
 })
 
 export default ProfileScreen

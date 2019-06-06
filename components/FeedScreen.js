@@ -8,7 +8,7 @@ import StarRating from 'react-native-star-rating';
 class FeedScreen extends Component {
   constructor(props) {
     super(props)
-    this.state={
+    this.state = {
       message: null,
       image: null,
       beer: null,
@@ -23,19 +23,20 @@ class FeedScreen extends Component {
     title: 'beerstyle',
   })
 
+  //画像を取得
   pickImage = async () => {
     const isAccepted = true
 
     const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL)
 
-    if(permission.status !== 'granted') {
+    if (permission.status !== 'granted') {
       const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL)
       if (newPermission.status !== 'granted') {
         isAccepted = false
       }
     }
 
-    if(isAccepted) {
+    if (isAccepted) {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [9, 9]
@@ -49,7 +50,7 @@ class FeedScreen extends Component {
   }
 
   postFeed = async (properties) => {
-    try{
+    try {
       this.setState({ uploading: true })
 
       const feedRef = getNewFeedDoc()
@@ -87,7 +88,7 @@ class FeedScreen extends Component {
       })
       this.props.navigation.navigate('Detail', { uuid })
     }
-    catch(e) {
+    catch (e) {
       console.log(e)
     }
     finally {
@@ -101,14 +102,14 @@ class FeedScreen extends Component {
     });
   }
 
-  render () {
-    if(this.props.user.uid) {
+  render() {
+    if (this.props.user.uid) {
       return (
         <Container style={styles.container}>
           <Content>
             <View style={styles.content}>
               <View style={styles.imageSection}>
-                {this.state.image? (
+                {this.state.image ? (
                   <Thumbnail
                     large
                     square
@@ -182,7 +183,7 @@ class FeedScreen extends Component {
                 onPress={() => this.postFeed(this.state)}
                 disabled={this.state.uploading}
               >
-                <Text style={styles.buttonText}>投稿</Text>  
+                <Text style={styles.buttonText}>投稿</Text>
               </Button>
             </View>
           </Content>
@@ -197,9 +198,9 @@ class FeedScreen extends Component {
             dark
             rounded
             onPress={authFacebook}
-            >
-              <Text style={styles.buttonText}>Login with Facebook</Text>
-            </Button>
+          >
+            <Text style={styles.buttonText}>Login with Facebook</Text>
+          </Button>
         </View>
       )
     }
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
   iconButton: {
     position: 'absolute',
     bottom: 32,
-    right: width/20,
+    right: width / 20,
     width: 64,
     height: 64,
     borderRadius: 32,
@@ -246,11 +247,11 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   title: {
-    width: width*9/10,
+    width: width * 9 / 10,
     marginBottom: 20,
   },
   description: {
-    width: width*9/10,
+    width: width * 9 / 10,
     marginBottom: 20,
   },
   button: {

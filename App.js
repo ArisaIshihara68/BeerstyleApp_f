@@ -5,6 +5,8 @@ import AppNavigator from './AppNavigator'
 import configureStore from './configureStore'
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
+import { Container } from 'native-base';
+
 
 const store = configureStore()
 
@@ -18,6 +20,19 @@ export default class App extends React.Component {
       </Provider>
     )
   }
+
+  componentWillMount() {
+    this.loadFonts();
+  }
+
+  //fonterror?
+  async loadFonts() {
+    await Expo.Font.loadAsync({
+      Roboto: require("./node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("./node_modules/native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.setState({ isReady: true });
+  };
 }
 
 //警告を強制排除
@@ -31,3 +46,5 @@ console.warn = message => {
     _console.warn(message);
   }
 };
+
+
