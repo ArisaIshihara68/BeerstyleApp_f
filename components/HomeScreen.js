@@ -7,7 +7,7 @@ import { feedCollection } from '../modules/firebase'
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
-    this.state={
+    this.state = {
       feeds: null,
     }
   }
@@ -16,7 +16,7 @@ class HomeScreen extends Component {
     title: 'beerstyle',
   })
 
-  componentWillMount () {
+  componentWillMount() {
     this.unsubscribe = feedCollection.orderBy('created_at').onSnapshot(querySnapshot => {
       const feeds = []
       querySnapshot.forEach(doc => {
@@ -31,7 +31,7 @@ class HomeScreen extends Component {
     this.unsubscribe()
   }
 
-  render () {
+  render() {
     return (
       <Container style={styles.container}>
         <Content>
@@ -50,7 +50,7 @@ class HomeScreen extends Component {
                 <CardItem cardBody button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
                   <Image
                     style={styles.image}
-                    source={{uri: element.image}}
+                    source={{ uri: element.image }}
                   />
                 </CardItem>
                 <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>

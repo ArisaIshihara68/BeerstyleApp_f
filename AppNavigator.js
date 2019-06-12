@@ -1,3 +1,5 @@
+// tab機能はここ
+
 import React from 'react'
 import { Platform } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation'
@@ -7,6 +9,8 @@ import DetailScreen from './containers/DetailScreen'
 import FeedScreen from './containers/FeedScreen'
 import ProfileScreen from './containers/ProfileScreen'
 import ProfileEditScreen from './containers/ProfileEditScreen'
+import MapScreen from './containers/MapScreen'
+
 
 const HomeStack = createStackNavigator(
   {
@@ -64,6 +68,31 @@ const FeedStack = createStackNavigator(
   }
 )
 
+const MapStack = createStackNavigator(
+  {
+    Map: {
+      screen: MapScreen
+    },
+  },
+  {
+    initialRouteName: 'Map',
+    navigationOptions: {
+      tabBarIcon: ({ focused }) => (
+        <Icon.Ionicons
+          name={
+            Platform.OS === 'ios'
+              ? 'ios-map'
+              : 'md-map'
+          }
+          size={26}
+          style={{ marginBottom: -3 }}
+          color={focused ? 'black' : 'gray'}
+        />
+      ),
+    },
+  }
+)
+
 const ProfileStack = createStackNavigator(
   {
     Profile: {
@@ -96,7 +125,9 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: HomeStack,
     Feed: FeedStack,
+    Map: MapStack,
     Profile: ProfileStack,
+
   },
   {
     tabBarOptions: {
