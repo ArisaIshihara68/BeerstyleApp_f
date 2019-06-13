@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Container, Content, Button, Thumbnail, Badge, Textarea } from 'native-base'
 import { Icon, Permissions, ImagePicker } from 'expo'
 import { getNewFeedDoc, uploadFeedImage, getUid, getNowDate, authFacebook, db } from '../modules/firebase'
-import StarRating from 'react-native-star-rating';
 
 class FeedScreen extends Component {
   constructor(props) {
@@ -126,24 +125,6 @@ class FeedScreen extends Component {
                     onPress={this.pickImage}
                   />
                 </Badge>
-              </View>
-
-              <View style={styles.textSection}>
-                <StarRating
-                  disabled={false}
-                  emptyStar="ios-star-outline"
-                  fullStar="ios-star"
-                  halfStar="ios-star-half"
-                  iconSet="Ionicons"
-                  maxStars={5}
-                  rating={this.state.starCount}
-                  selectedStar={rating => this.onStarRatingPress(rating)}
-                  fullStarColor="yellow"
-                  halfStarColor="yellow"
-                  emptyStarColor="yellow"
-                  halfStarEnabled
-                  starPadding={10}
-                />
               </View>
 
               <View style={styles.textSection}>
