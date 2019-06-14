@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Platform, StyleSheet, Dimensions, View, Text, Image } from 'react-native'
+import { Platform, StyleSheet, Dimensions, View, Text, Image, TouchableOpacity } from 'react-native'
 import { Container, Content, Header, Left, Button, Thumbnail } from 'native-base'
 import moment from 'moment-timezone'
 import { Icon } from 'expo'
+import { ActionSheetProvider, connectActionSheet} from '@expo/react-native-action-sheet'
 import { feedCollection, userCollection } from '../modules/firebase'
 
 class DetailScreen extends Component {
@@ -80,6 +81,9 @@ class DetailScreen extends Component {
   }
 
   render () {
+
+    const uuid = this.props.navigation.getParam('uuid', null)
+
     if (!this.state.feed) {
       return (
         <View style={styles.notLoginContainer}>
@@ -129,6 +133,12 @@ class DetailScreen extends Component {
 
               <View style={styles.divider} />
 
+              <View style={{ flex: 1 }}>
+                <ActionSheetProvider>
+                  <ActionSheet />
+                </ActionSheetProvider>
+              </View>
+
               <Text style={styles.description}>{this.state.feed.beer}</Text>
 
               <Text style={styles.description}>{this.state.feed.rating}</Text>
@@ -136,12 +146,51 @@ class DetailScreen extends Component {
               <Text style={styles.description}>{this.state.feed.message}</Text>
 
               <Text style={styles.description}>{this.state.feed.location}</Text>
+
+              <Button
+                transparent
+                dark
+                onPress={() => this.props.navigation.navigate('Edit', { uuid: uuid })}
+              >
+                <Text>投稿編集</Text>
+              </Button>
             </View>
           </Content>
         }
       </Container>
     )
   }
+}
+
+//ActionSheetのための記述
+
+@connectActionSheet class ActionSheet extends React.Component {
+  render() {
+    return (
+        <TouchableOpacity
+          style={{ backgroundColor: "#000" }}
+          onPress={this._onOpenActionSheet}
+        >
+          <Text style={{ fontSize: 15, color: '#fff' }}>Open action sheet</Text>
+        </TouchableOpacity>
+    );
+  }
+
+  _onOpenActionSheet = () => {
+    let options = ['Delete', 'Edit', 'Cancel'];
+    let destructiveButtonIndex = 0;
+    let cancelButtonIndex = 2;
+    this.props.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      buttonIndex => {
+        
+      }
+    );
+  };
 }
 
 const { width, height } = Dimensions.get('window')

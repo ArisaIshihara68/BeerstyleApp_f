@@ -74,6 +74,7 @@ export const getNewFeedDoc = () => {
 
 const storageRef = firebase.storage().ref()
 export const userRef = storageRef.child('User')
+export const feedRef = storageRef.child('User')
 
 export const uploadAvatar = async(uri) => {
   const { uid } = getUid()

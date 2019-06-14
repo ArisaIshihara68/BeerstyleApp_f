@@ -7,6 +7,7 @@ import { Icon } from 'expo'
 import HomeScreen from './containers/HomeScreen'
 import DetailScreen from './containers/DetailScreen'
 import FeedScreen from './containers/FeedScreen'
+import FeedEditScreen from './containers/FeedEditScreen'
 import ProfileScreen from './containers/ProfileScreen'
 import ProfileEditScreen from './containers/ProfileEditScreen'
 import MapScreen from './containers/MapScreen'
@@ -19,6 +20,9 @@ const HomeStack = createStackNavigator(
     },
     Detail: {
       screen: DetailScreen
+    },
+    Edit: {
+      screen: FeedEditScreen
     },
   },
   {
@@ -47,6 +51,9 @@ const FeedStack = createStackNavigator(
     },
     Detail: {
       screen: DetailScreen
+    },
+    Edit: {
+      screen: FeedEditScreen
     },
   },
   {
