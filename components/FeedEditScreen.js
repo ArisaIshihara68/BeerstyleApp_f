@@ -22,16 +22,6 @@ class FeedEditScreen extends Component {
         if(uuid) {
           this.unsubscribe = feedCollection.doc(uuid).onSnapshot(doc => {
             const feed = doc.data()
-    
-            let date
-            try {
-              date = moment.unix(feed.updated_at.seconds).format('YYYY/MM/DD HH:mm:ss')
-            }
-            catch (e) {
-              console.log(e)
-              date = '投稿日不明'
-            }
-    
             this.setState({
               feed : {
                 image: feed.image,
@@ -39,8 +29,6 @@ class FeedEditScreen extends Component {
                 rating: feed.rating,
                 message: feed.message,
                 location: feed.location,
-                writer: feed.writer,
-                updated_at: date,
               }
             })
           })
@@ -80,20 +68,16 @@ class FeedEditScreen extends Component {
       if (this.state.image) {
         downloadUrl = await uploadFeedImage(this.state.image, uuid)
       }
-
-      const batch = db.batch()
       const uuid = this.props.navigation.getParam('uuid', null)
+      const batch = db.batch()
       const feedRef = feedCollection.doc(uuid)
-      const { uid } = getUid()
 
       await batch.set(feedRef, {
         message: feed.message,
         image: downloadUrl,
         beer: feed.beer,
-        rating: feed.starCount,
+        rating: feed.rating,
         location: feed.location,
-        writer: uid,
-        created_at: getNowDate(),
         updated_at: getNowDate(),
       })
       await batch.commit().then(() => {
@@ -106,6 +90,7 @@ class FeedEditScreen extends Component {
         beer: null,
         rating: null,
         location: null,
+        updated_at: null,
       })
 
       this.props.navigation.goBack()
@@ -124,26 +109,6 @@ class FeedEditScreen extends Component {
 
       return (
         <Container style={styles.container}>
-          <Header transparent>
-            <Left>
-              <Button
-                transparent
-                onPress={() => this.props.navigation.goBack()}
-              >
-                <Icon.Ionicons
-                  name={
-                    Platform.OS === 'ios'
-                    ? 'ios-arrow-back'
-                    : 'md-arrow-back'
-                  }
-                  size={24}
-                  style={styles.backButton}
-                  color='black'
-                />
-              </Button>
-            </Left>
-          </Header>
-
           <Content>
             <View style={styles.content}>
               <View style={styles.imageSection}>
@@ -171,7 +136,7 @@ class FeedEditScreen extends Component {
                   style={styles.description}
                   rowSpan={1.2}
                   bordered
-                  value={this.state.feed.beer ? this.state.feed.beer : ''}
+                  placeholder={this.state.feed.beer ? this.state.feed.beer : ''}
                   onChangeText={beer => this.setState({ beer })}
                 />
               </View>
@@ -181,7 +146,7 @@ class FeedEditScreen extends Component {
                   style={styles.description}
                   rowSpan={5}
                   bordered
-                  value={this.state.feed.message ? this.state.feed.message : ''}
+                  placeholder={this.state.feed.message ? this.state.feed.message : ''}
                   onChangeText={message => this.setState({ message })}
                 />
               </View>
@@ -191,7 +156,7 @@ class FeedEditScreen extends Component {
                   style={styles.description}
                   rowSpan={1.2}
                   bordered
-                  value={this.state.feed.location ? this.state.feed.location : ''}
+                  placeholder={this.state.feed.location ? this.state.feed.location : ''}
                   onChangeText={location => this.setState({ location })}
                 />
               </View>
