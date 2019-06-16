@@ -3,13 +3,13 @@ import { Platform, StyleSheet, Dimensions, View, Text, Image, TouchableOpacity }
 import { Container, Content, Header, Left, Button, Thumbnail } from 'native-base'
 import moment from 'moment-timezone'
 import { Icon } from 'expo'
-import { ActionSheetProvider, connectActionSheet} from '@expo/react-native-action-sheet'
+//import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet'
 import { feedCollection, userCollection } from '../modules/firebase'
 
 class DetailScreen extends Component {
   constructor(props) {
     super(props)
-    this.state={
+    this.state = {
       feed: null,
       writer: null,
     }
@@ -22,7 +22,7 @@ class DetailScreen extends Component {
   componentWillMount() {
     const uuid = this.props.navigation.getParam('uuid', null)
 
-    if(uuid) {
+    if (uuid) {
       this.unsubscribe = feedCollection.doc(uuid).onSnapshot(doc => {
         const feed = doc.data()
 
@@ -36,7 +36,7 @@ class DetailScreen extends Component {
         }
 
         this.setState({
-          feed : {
+          feed: {
             image: feed.image,
             beer: feed.beer,
             rating: feed.rating,
@@ -48,39 +48,39 @@ class DetailScreen extends Component {
         })
 
         userCollection.doc(feed.writer).get()
-        .then(_doc => {
-          if(_doc.exists) {
-            const user = _doc.data()
-            this.setState({
-              user: {
-                name: user.name,
-                avatar: user.avatar,
-              }
-            })
-          }
-          else {
+          .then(_doc => {
+            if (_doc.exists) {
+              const user = _doc.data()
+              this.setState({
+                user: {
+                  name: user.name,
+                  avatar: user.avatar,
+                }
+              })
+            }
+            else {
+              this.setState({
+                user: {
+                  name: null,
+                  avatar: null,
+                }
+              })
+            }
+          })
+          .catch(error => {
             this.setState({
               user: {
                 name: null,
                 avatar: null,
               }
             })
-          }
-        })
-        .catch(error => {
-          this.setState({
-            user: {
-              name: null,
-              avatar: null,
-            }
+            console.log(error)
           })
-          console.log(error)
-        })
       })
     }
   }
 
-  render () {
+  render() {
 
     const uuid = this.props.navigation.getParam('uuid', null)
 
@@ -103,8 +103,8 @@ class DetailScreen extends Component {
               <Icon.Ionicons
                 name={
                   Platform.OS === 'ios'
-                  ? 'ios-arrow-back'
-                  : 'md-arrow-back'
+                    ? 'ios-arrow-back'
+                    : 'md-arrow-back'
                 }
                 size={24}
                 style={styles.backBtn}
@@ -117,13 +117,13 @@ class DetailScreen extends Component {
         {this.state.feed &&
           <Content style={styles.content}>
             <Image
-              source={{uri: this.state.feed.image}}
+              source={{ uri: this.state.feed.image }}
               style={styles.image}
             />
             <View style={styles.words}>
               {this.state.user &&
                 <View style={styles.writer}>
-                  <Thumbnail small source={{uri: this.state.user.avatar}} style={styles.avatar} />
+                  <Thumbnail small source={{ uri: this.state.user.avatar }} style={styles.avatar} />
                   <View>
                     <Text style={styles.writerName}>{this.state.user.name}</Text>
                     <Text style={styles.date}>{this.state.feed.updated_at} にこの記事は更新されています。</Text>
@@ -164,7 +164,7 @@ class DetailScreen extends Component {
 
 //ActionSheetのための記述
 
-@connectActionSheet class ActionSheet extends React.Component {
+/*@connectActionSheet class ActionSheet extends React.Component {
   render() {
     return (
         <TouchableOpacity
@@ -191,7 +191,7 @@ class DetailScreen extends Component {
       }
     );
   };
-}
+}*/
 
 const { width, height } = Dimensions.get('window')
 
