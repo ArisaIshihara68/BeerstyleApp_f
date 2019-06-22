@@ -14,7 +14,6 @@ class FeedScreen extends Component {
       rating: null,
       location: null,
       uploading: false,
-      starCount: 5.0
     }
   }
 
@@ -68,7 +67,7 @@ class FeedScreen extends Component {
         message: properties.message,
         image: downloadUrl,
         beer: properties.beer,
-        rating: properties.starCount,
+        rating: properties.rating,
         location: properties.location,
         writer: uid,
         created_at: getNowDate(),
@@ -93,12 +92,6 @@ class FeedScreen extends Component {
     finally {
       this.setState({ uploading: false })
     }
-  }
-
-  onStarRatingPress(rating) {
-    this.setState({
-      starCount: rating
-    });
   }
 
   render() {

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Platform, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Container, Content, Header, Left, Button, Thumbnail, Badge, Textarea } from 'native-base'
 import { Icon, Permissions, ImagePicker } from 'expo'
-import { feedCollection, uploadFeedImage, db } from '../modules/firebase'
+import { feedCollection, uploadFeedImage, db, getNowDate } from '../modules/firebase'
 
 class FeedEditScreen extends Component {
     constructor(props) {
@@ -65,8 +65,8 @@ class FeedEditScreen extends Component {
       this.setState({ uploading: true })
 
       let downloadUrl = null
-      if (this.state.image) {
-        downloadUrl = await uploadFeedImage(this.state.image, uuid)
+      if (feed.image) {
+        downloadUrl = await uploadFeedImage(feed.image, uuid)
       }
       const uuid = this.props.navigation.getParam('uuid', null)
       const batch = db.batch()
@@ -83,17 +83,8 @@ class FeedEditScreen extends Component {
       await batch.commit().then(() => {
         console.log('edit feed success.')
       })
-
-      this.setState({
-        message: null,
-        image: null,
-        beer: null,
-        rating: null,
-        location: null,
-        updated_at: null,
-      })
-
-      this.props.navigation.goBack()
+      
+      // this.props.navigation.goBack()
     }
     catch(e) {
       console.log(e)
@@ -105,6 +96,8 @@ class FeedEditScreen extends Component {
   }
 
   render () {
+    const { feed } = this.state
+    
     if(this.state.feed) {
 
       return (
@@ -136,8 +129,8 @@ class FeedEditScreen extends Component {
                   style={styles.description}
                   rowSpan={1.2}
                   bordered
-                  placeholder={this.state.feed.beer ? this.state.feed.beer : ''}
-                  onChangeText={beer => this.setState({ beer })}
+                  value={this.state.feed.beer ? this.state.feed.beer : ''}
+                  onChangeText={beer => this.setState({ feed: { ...feed, beer } })}
                 />
               </View>
 
@@ -147,7 +140,7 @@ class FeedEditScreen extends Component {
                   rowSpan={5}
                   bordered
                   placeholder={this.state.feed.message ? this.state.feed.message : ''}
-                  onChangeText={message => this.setState({ message })}
+                  onChangeText={message => this.setState({ feed: { ...feed, message } })}
                 />
               </View>
 
@@ -157,7 +150,7 @@ class FeedEditScreen extends Component {
                   rowSpan={1.2}
                   bordered
                   placeholder={this.state.feed.location ? this.state.feed.location : ''}
-                  onChangeText={location => this.setState({ location })}
+                  onChangeText={location => this.setState({ feed: { ...feed, location } })}
                 />
               </View>
 
@@ -165,7 +158,7 @@ class FeedEditScreen extends Component {
                 style={styles.button}
                 dark
                 rounded
-                onPress={() => this.updateFeed(this.state)}
+                onPress={() => this.updateFeed(this.state.feed)}
                 disabled={this.state.uploading}
               >
                 <Text style={styles.buttonText}>投稿を保存</Text>

@@ -3,7 +3,6 @@ import { Platform, StyleSheet, Dimensions, View, Text, Image, TouchableOpacity }
 import { Container, Content, Header, Left, Button, Thumbnail } from 'native-base'
 import moment from 'moment-timezone'
 import { Icon } from 'expo'
-//import { ActionSheetProvider, connectActionSheet } from '@expo/react-native-action-sheet'
 import { feedCollection, userCollection } from '../modules/firebase'
 
 class DetailScreen extends Component {
@@ -37,6 +36,7 @@ class DetailScreen extends Component {
 
         this.setState({
           feed: {
+            uuid: uuid,
             image: feed.image,
             beer: feed.beer,
             rating: feed.rating,
@@ -77,6 +77,20 @@ class DetailScreen extends Component {
             console.log(error)
           })
       })
+    }
+  }
+
+  deleteFeed = async (properties) => {
+    try{
+      feedCollection.doc(properties.uuid).delete()
+      this.props.navigation.goBack()
+    }
+    catch(e) {
+      console.log(e)
+      alert('cant delete, sorry :(')
+    }
+    finally {
+      this.setState({ uploading: false })
     }
   }
 
@@ -133,12 +147,6 @@ class DetailScreen extends Component {
 
               <View style={styles.divider} />
 
-              <View style={{ flex: 1 }}>
-                <ActionSheetProvider>
-                  <ActionSheet />
-                </ActionSheetProvider>
-              </View>
-
               <Text style={styles.description}>{this.state.feed.beer}</Text>
 
               <Text style={styles.description}>{this.state.feed.rating}</Text>
@@ -154,6 +162,13 @@ class DetailScreen extends Component {
               >
                 <Text>投稿編集</Text>
               </Button>
+              <Button
+                transparent
+                dark
+                onPress={() => this.deleteFeed(this.state.feed)}
+              >
+                <Text>投稿削除</Text>
+              </Button>
             </View>
           </Content>
         }
@@ -161,37 +176,6 @@ class DetailScreen extends Component {
     )
   }
 }
-
-//ActionSheetのための記述
-
-/*@connectActionSheet class ActionSheet extends React.Component {
-  render() {
-    return (
-        <TouchableOpacity
-          style={{ backgroundColor: "#000" }}
-          onPress={this._onOpenActionSheet}
-        >
-          <Text style={{ fontSize: 15, color: '#fff' }}>Open action sheet</Text>
-        </TouchableOpacity>
-    );
-  }
-
-  _onOpenActionSheet = () => {
-    let options = ['Delete', 'Edit', 'Cancel'];
-    let destructiveButtonIndex = 0;
-    let cancelButtonIndex = 2;
-    this.props.showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-      },
-      buttonIndex => {
-        
-      }
-    );
-  };
-}*/
 
 const { width, height } = Dimensions.get('window')
 
