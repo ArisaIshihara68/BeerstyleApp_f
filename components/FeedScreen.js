@@ -150,6 +150,16 @@ class FeedScreen extends Component {
                 />
               </View>
 
+              <View style={styles.textSection}>
+                <Textarea
+                  style={styles.description}
+                  rowSpan={1.2}
+                  bordered
+                  placeholder='点数を入力する。'
+                  onChangeText={rating => this.setState({ rating })}
+                />
+              </View>
+
               <Button
                 style={styles.button}
                 dark

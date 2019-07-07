@@ -24,11 +24,13 @@ class FeedEditScreen extends Component {
             const feed = doc.data()
             this.setState({
               feed : {
+                writer: feed.writer,
                 image: feed.image,
                 beer: feed.beer,
                 rating: feed.rating,
                 message: feed.message,
                 location: feed.location,
+                updated_at: feed.updated_at,
               }
             })
           })
@@ -36,29 +38,29 @@ class FeedEditScreen extends Component {
     }
 
     pickImage = async () => {
-        let isAccepted = true
+      let isAccepted = true
 
-        const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL)
-        
-        if(permission.status !== 'granted') {
-        const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-        if (newPermission.status !== 'granted') {
-            isAccepted = false
-        }
+      const permission = await Permissions.getAsync(Permissions.CAMERA_ROLL)
+      
+      if(permission.status !== 'granted') {
+          const newPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+          if (newPermission.status !== 'granted') {
+              isAccepted = false
+          }
+      }
+
+      if(isAccepted) {
+          let result = await ImagePicker.launchImageLibraryAsync({
+              allowsEditing: true,
+              aspect: [9, 9]
+          })
+
+          if (!result.cancelled) {
+              this.setState({ image: result.uri })
+              console.log(result.uri)
+          }
+      }
     }
-
-    if(isAccepted) {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [9, 9]
-        })
-
-        if (!result.cancelled) {
-            this.setState({ image: result.uri })
-            console.log(result.uri)
-        }
-    }
-  }
 
   updateFeed = async (feed) => {
     try{
@@ -73,18 +75,19 @@ class FeedEditScreen extends Component {
       const feedRef = feedCollection.doc(uuid)
 
       await batch.set(feedRef, {
+        writer: feed.writer,
         message: feed.message,
         image: downloadUrl,
         beer: feed.beer,
-        rating: feed.rating,
         location: feed.location,
+        rating: feed.rating,
         updated_at: getNowDate(),
       })
       await batch.commit().then(() => {
         console.log('edit feed success.')
       })
       
-      // this.props.navigation.goBack()
+      this.props.navigation.navigate('Detail', { uuid })
     }
     catch(e) {
       console.log(e)
@@ -139,7 +142,7 @@ class FeedEditScreen extends Component {
                   style={styles.description}
                   rowSpan={5}
                   bordered
-                  placeholder={this.state.feed.message ? this.state.feed.message : ''}
+                  value={this.state.feed.message ? this.state.feed.message : ''}
                   onChangeText={message => this.setState({ feed: { ...feed, message } })}
                 />
               </View>
@@ -149,7 +152,7 @@ class FeedEditScreen extends Component {
                   style={styles.description}
                   rowSpan={1.2}
                   bordered
-                  placeholder={this.state.feed.location ? this.state.feed.location : ''}
+                  value={this.state.feed.location ? this.state.feed.location : ''}
                   onChangeText={location => this.setState({ feed: { ...feed, location } })}
                 />
               </View>

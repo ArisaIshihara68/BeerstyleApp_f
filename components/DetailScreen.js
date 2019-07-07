@@ -83,7 +83,7 @@ class DetailScreen extends Component {
   deleteFeed = async (properties) => {
     try{
       feedCollection.doc(properties.uuid).delete()
-      this.props.navigation.goBack()
+      this.props.navigation.navigate('Home')
     }
     catch(e) {
       console.log(e)
