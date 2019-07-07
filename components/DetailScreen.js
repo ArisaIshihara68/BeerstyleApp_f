@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Dimensions, View, Text, Image, TouchableOpacity }
 import { Container, Content, Header, Left, Button, Thumbnail } from 'native-base'
 import moment from 'moment-timezone'
 import { Icon } from 'expo'
-import { feedCollection, userCollection } from '../modules/firebase'
+import { feedCollection, userCollection, getUid } from '../modules/firebase'
 
 class DetailScreen extends Component {
   constructor(props) {
@@ -80,23 +80,24 @@ class DetailScreen extends Component {
     }
   }
 
-  deleteFeed = async (properties) => {
-    try{
-      feedCollection.doc(properties.uuid).delete()
-      this.props.navigation.navigate('Home')
-    }
-    catch(e) {
-      console.log(e)
-      alert('cant delete, sorry :(')
-    }
-    finally {
-      this.setState({ uploading: false })
-    }
-  }
+  // deleteFeed = async (properties) => {
+  //   try{
+  //     feedCollection.doc(properties).delete()
+  //     this.props.navigation.navigate('Home')
+  //   }
+  //   catch(e) {
+  //     console.log(e)
+  //     alert('cant delete, sorry :(')
+  //   }
+  //   finally {
+  //     this.setState({ uploading: false })
+  //   }
+  // }
 
   render() {
 
     const uuid = this.props.navigation.getParam('uuid', null)
+    const { uid } = getUid()
 
     if (!this.state.feed) {
       return (
@@ -155,20 +156,27 @@ class DetailScreen extends Component {
 
               <Text style={styles.description}>{this.state.feed.location}</Text>
 
-              <Button
+              {(() => {
+                  if (this.state.feed.writer == uid) {
+                    return (
+                      <Button
+                        transparent
+                        dark
+                        onPress={() => this.props.navigation.navigate('Edit', { uuid: uuid })}
+                      >
+                        <Text>投稿編集</Text>
+                      </Button>
+                    )
+                  }
+                })()}
+
+              {/* <Button
                 transparent
                 dark
-                onPress={() => this.props.navigation.navigate('Edit', { uuid: uuid })}
-              >
-                <Text>投稿編集</Text>
-              </Button>
-              <Button
-                transparent
-                dark
-                onPress={() => this.deleteFeed(this.state.feed)}
+                onPress={() => this.deleteFeed(uuid)}
               >
                 <Text>投稿削除</Text>
-              </Button>
+              </Button> */}
             </View>
           </Content>
         }

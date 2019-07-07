@@ -78,13 +78,14 @@ class FeedScreen extends Component {
       })
 
       this.setState({
-        message: null,
-        image: null,
-        beer: null,
-        rating: null,
-        location: null,
-      })
-      this.props.navigation.navigate('Detail', { uuid })
+          message: null,
+          image: null,
+          beer: null,
+          rating: null,
+          location: null,
+          uploading: false,
+        })
+      this.props.navigation.navigate('Home')
     }
     catch (e) {
       console.log(e)
