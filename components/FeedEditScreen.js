@@ -25,6 +25,7 @@ class FeedEditScreen extends Component {
             this.setState({
               feed : {
                 writer: feed.writer,
+                created_at: feed.created_at,
                 image: feed.image,
                 beer: feed.beer,
                 rating: feed.rating,
@@ -76,6 +77,7 @@ class FeedEditScreen extends Component {
 
       await batch.set(feedRef, {
         writer: feed.writer,
+        created_at: feed.created_at,
         message: feed.message,
         image: downloadUrl,
         beer: feed.beer,

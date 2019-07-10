@@ -198,8 +198,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   content: {
-    position: 'absolute',
-    top: 0,
     zIndex: -1,
   },
   image: {

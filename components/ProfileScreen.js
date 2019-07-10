@@ -106,9 +106,10 @@ class ProfileScreen extends Component {
                   </CardItem>
                   <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
                     <Body>
-                      <Text>{element.beer}</Text>
-                      <Text>{element.message}</Text>
-                      <Text>{element.rating}</Text>
+                      <Text style={styles.beer}>{element.beer}</Text>
+                      <Text style={styles.message}>{element.message}</Text>
+                      <Text style={styles.location}>{element.location}</Text>
+                      <Text style={styles.rating}>{element.rating}</Text>
                       <Text style={styles.date}>{date}</Text>
                     </Body>
                   </CardItem>
@@ -207,10 +208,31 @@ const styles = StyleSheet.create({
   },
   date: {
     position: 'absolute',
-    top: 50,
-    left: 0,
+    top: 70,
+    right: 0,
     color: 'gray',
     fontSize: 10.5,
+  },
+  rating: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    fontSize: 42,
+  },
+  location: {
+    position: 'absolute',
+    top: 50,
+    right: 0,
+    fontSize: 15,
+  },
+  beer: {
+    fontSize: 25,
+  },
+  message: {
+    margin: 10,
+    fontSize: 15,
+    width: 230,
+    height: 50,
   },
 })
 
