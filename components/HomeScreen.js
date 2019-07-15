@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   message: {
-    margin: 10,
+    marginTop: 10,
+    marginBottom: 10,
     fontSize: 15,
     width: 230,
     height: 50,

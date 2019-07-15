@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, Dimensions, Slider } from 'react-native'
 import { Container, Content, Button, Thumbnail, Badge, Textarea } from 'native-base'
 import { Icon, Permissions, ImagePicker } from 'expo'
 import { getNewFeedDoc, uploadFeedImage, getUid, getNowDate, authFacebook, db } from '../modules/firebase'
@@ -11,7 +11,7 @@ class FeedScreen extends Component {
       message: null,
       image: null,
       beer: null,
-      rating: null,
+      rating: 5.0,
       location: null,
       uploading: false,
     }
@@ -20,6 +20,12 @@ class FeedScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'beerstyle',
   })
+
+  changeRating = (rating) => {
+    this.setState({
+      rating: rating
+    });
+  }
 
   //画像を取得
   pickImage = async () => {
@@ -96,6 +102,7 @@ class FeedScreen extends Component {
   }
 
   render() {
+    const rating = this.state.rating;
     if (this.props.user.uid) {
       return (
         <Container style={styles.container}>
@@ -131,6 +138,18 @@ class FeedScreen extends Component {
                 />
               </View>
 
+              <Text>
+                点数：{rating}
+              </Text>
+
+              <Slider
+                style={styles.slider}
+                step={0.5}
+                maximumValue={10}
+                onValueChange={this.changeRating}
+                rating={rating}
+              />
+
               <View style={styles.textSection}>
                 <Textarea
                   style={styles.description}
@@ -148,16 +167,6 @@ class FeedScreen extends Component {
                   bordered
                   placeholder='飲んだ場所を入力する。'
                   onChangeText={location => this.setState({ location })}
-                />
-              </View>
-
-              <View style={styles.textSection}>
-                <Textarea
-                  style={styles.description}
-                  rowSpan={1.2}
-                  bordered
-                  placeholder='点数を入力する。'
-                  onChangeText={rating => this.setState({ rating })}
                 />
               </View>
 
@@ -229,7 +238,11 @@ const styles = StyleSheet.create({
     borderRadius: 32,
   },
   textSection: {
-    padding: 5,
+    width: width,
+    justifyContent: 'center',
+  },
+  slider: {
+    width: width,
   },
   title: {
     width: width * 9 / 10,
