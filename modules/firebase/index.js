@@ -61,6 +61,7 @@ export const logout = () => {
 export const db = firebase.firestore()
 export const userCollection = db.collection('User')
 export const feedCollection = db.collection('Feed')
+export const likeCollection = db.collection('Like')
 
 export const getNowDate = () => {
   return firebase.firestore.FieldValue.serverTimestamp()
@@ -124,4 +125,38 @@ export const uploadFeedImage = async(uri, uuid) => {
   const snapshot = await feedImageRef.put(blob)
   blob.close()
   return await snapshot.ref.getDownloadURL()
+}
+
+export const likepost = async(feed) => {
+  try {
+    const { uid } = getUid()
+    let liked = true;
+    await likeCollection.where('Feed_id', '==', feed.uuid).where('User_id', '==', uid).get().then(async (snapshot) => {
+      if(snapshot.size === 0) {
+        likeCollection.add({User_id: uid, Feed_id: feed.uuid})
+        // this.user.doc(`${this.uid}`).collection(`liked`).doc(`${item.pid}`).set({timestamp: Date.now()});
+        // this.notification.add({
+        //   type: `like`,
+        //   uid: item.user.uid,
+        //   post: this.post.doc(`${item.pid}`),
+        //   from: this.user.doc(`${this.uid}`),
+        //   timestamp: Date.now(),
+        // });
+        liked = true;
+      } else {
+        snapshot.forEach(like => {
+          likeCollection.doc(like.id).delete()
+        })
+        // this.user.doc(`${this.uid}`).collection(`liked`).doc(`${item.pid}`).delete();
+        // const querySnapshot = await this.notification.where(`type`, `==`, `like`).where(`post`, `==`, this.post.doc(`${item.pid}`)).where(`from`, `==`, this.user.doc(`${this.uid}`)).get();
+        // await Promise.all(querySnapshot.docs.map(async (d) => {
+        //   await d.ref.delete();
+        // }));
+        liked = false;
+      }
+    });
+    return liked;
+  } catch ({ message }) {
+    return { error: message };
+  }
 }

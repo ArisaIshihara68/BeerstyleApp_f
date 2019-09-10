@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { StyleSheet, Image, Dimensions } from 'react-native'
-import { Container, Content, Card, CardItem, Body, Text } from 'native-base'
+import { Container, Content, Card, CardItem, Body, Text, Icon } from 'native-base'
 import moment from 'moment-timezone'
-import { feedCollection } from '../modules/firebase'
+import { feedCollection, likeCollection, likepost, getUid } from '../modules/firebase'
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      feeds: null,
+      feeds: [],
+      likeFeeds: [],
     }
   }
 
@@ -20,15 +21,34 @@ class HomeScreen extends Component {
     this.unsubscribe = feedCollection.orderBy('created_at').onSnapshot(querySnapshot => {
       const feeds = []
       querySnapshot.forEach(doc => {
-        feeds.push({ uuid: doc.id, ...doc.data() })
+        feeds.push({ uuid: doc.id, ...doc.data(), liked: false })
       })
       feeds.reverse()
       this.setState({ feeds })
+    })
+    likeCollection.where('User_id', '==', getUid().uid).onSnapshot(snapshot => {
+      const likeFeeds = []
+      snapshot.forEach(like => {
+        likeFeeds.push(like.data().Feed_id)
+      })
+      this.setState({
+        ...this.state,
+        likeFeeds
+      })
     })
   }
 
   componentWillUnmount() {
     this.unsubscribe()
+  }
+
+  onLikePress = async (feed) => {
+    try {
+      likepost(feed)
+    }
+    catch (e) {
+      console.log(e)
+    }
   }
 
   render() {
@@ -52,6 +72,19 @@ class HomeScreen extends Component {
                     style={styles.image}
                     source={{ uri: element.image }}
                   />
+                  {
+                    this.state.likeFeeds.includes(element.uuid) ?
+                      <Icon
+                        name="heart"
+                        style={{ color: '#ED4A6A', position: 'absolute',right: 10, bottom: 0, fontSize: 30, }}
+                        onPress={() => this.onLikePress(element)}
+                      /> : 
+                      <Icon
+                        name="heart"
+                        style={{ position: 'absolute',right: 10, bottom: 0,fontSize: 30, }}
+                        onPress={() => this.onLikePress(element)}
+                      /> 
+                  }
                 </CardItem>
                 <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
                   <Body>
@@ -84,11 +117,11 @@ const styles = StyleSheet.create({
   },
   card: {
     width: width,
-    height: 300,
+    height:400,
   },
   image: {
     width: width,
-    height: 200,
+    height: 300,
     overflow: 'hidden',
   },
   date: {
