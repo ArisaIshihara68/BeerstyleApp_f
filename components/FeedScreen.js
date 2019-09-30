@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
   textSection: {
     width: width,
     justifyContent: 'center',
+    flexDirection:'row'
   },
   slider: {
     width: width,

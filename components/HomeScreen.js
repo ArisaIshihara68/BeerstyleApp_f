@@ -26,16 +26,16 @@ class HomeScreen extends Component {
       feeds.reverse()
       this.setState({ feeds })
     })
-    likeCollection.where('User_id', '==', getUid().uid).onSnapshot(snapshot => {
-      const likeFeeds = []
-      snapshot.forEach(like => {
-        likeFeeds.push(like.data().Feed_id)
-      })
-      this.setState({
-        ...this.state,
-        likeFeeds
-      })
-    })
+    // likeCollection.where('User_id', '==', getUid().uid).onSnapshot(snapshot => {
+    //   const likeFeeds = []
+    //   snapshot.forEach(like => {
+    //     likeFeeds.push(like.data().Feed_id)
+    //   })
+    //   this.setState({
+    //     ...this.state,
+    //     likeFeeds
+    //   })
+    // })
   }
 
   componentWillUnmount() {
@@ -72,7 +72,7 @@ class HomeScreen extends Component {
                     style={styles.image}
                     source={{ uri: element.image }}
                   />
-                  {
+                  {/* {
                     this.state.likeFeeds.includes(element.uuid) ?
                       <Icon
                         name="heart"
@@ -84,7 +84,7 @@ class HomeScreen extends Component {
                         style={{ position: 'absolute',right: 10, bottom: 0,fontSize: 30, }}
                         onPress={() => this.onLikePress(element)}
                       /> 
-                  }
+                  } */}
                 </CardItem>
                 <CardItem style={styles.inner} button onPress={() => this.props.navigation.navigate('Detail', { uuid: element.uuid })}>
                   <Body>
